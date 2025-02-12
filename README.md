@@ -7,7 +7,7 @@ This is an NFC web application.
 You can download the repo or clone it using git clone.
 
 ```bash
-git clone https://github.com/Abd-ElRahmanMamdouh/NFC_Project .
+git clone https://github.com/gismoba/chipper.git .
 ```
 
 ## Requirements
