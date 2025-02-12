@@ -1,0 +1,30 @@
+{% load i18n %}
+{% if messages %}
+    {% if messages|length > 1 %}
+        <script>
+            Swal.fire({
+                {% for message in messages %}
+                icon: "{{ message.tags }}",
+                title: '{% if message.tags == "error" %}{% trans "Error!" %}{% elif message.tags == "success" %}{% trans "Success" %}{% elif message.tags == "warning" %}{% trans "Warning" %}{% else %}{% trans "Info" %}{% endif %}',
+                {% endfor %}
+                html: "<ul class='errorlist'>{% for message in messages %}<li {% if message.tags == 'success'%}class='successlist'{% endif %}>{{ message }}</li>{% endfor %}</ul>",
+                confirmButtonText: '{% trans "OK" %}',
+                confirmButtonColor: '#269ffd',
+
+            });
+        </script>
+    {% else %}
+        {% for message in messages %}
+        <script>
+            Swal.fire({
+                icon: "{{ message.tags }}",
+                title: '{% if message.tags == "error" %}{% trans "Error!" %}{% elif message.tags == "success" %}{% trans "Success" %}{% elif message.tags == "warning" %}{% trans "Warning" %}{% else %}{% trans "Info" %}{% endif %}',
+                html: "<h4>{{ message }}</h4>",
+                confirmButtonText: '{% trans "OK" %}',
+                confirmButtonColor: '#269ffd',
+
+            });
+        </script>
+        {% endfor %}
+    {% endif %}
+{% endif %}

@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load hitcount_tags %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}
+{% trans 'Update Card' %} - {{ card }}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">{{ card }}</h2>
+            <div class="text-muted mt-1">
+                <i class="far fa-eye me-1"></i>
+                {% get_hit_count for card as hits %}
+                {{ hits }} views
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ card.get_absolute_url }}" class="btn btn-outline-primary" target="_blank">
+                <i class="fas fa-external-link-alt me-2"></i>View on Site
+            </a>
+            <a href="{% url 'cards:user_dashboard' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row">
+        <!-- Basic Settings -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cog me-2"></i>Basic Settings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'cards:update_card_title' card.uuid card.pk %}" class="btn btn-outline-primary">
+                            <i class="fas fa-heading me-2"></i>
+                            {% if card.title %}Update Title{% else %}Set Title{% endif %}
+                        </a>
+                        <a href="{% url 'cards:update_card_password' card.uuid card.pk %}"
+                            class="btn btn-outline-primary">
+                            <i class="fas {% if card.password %}fa-lock{% else %}fa-lock-open{% endif %} me-2"></i>
+                            {% if card.password %}Update Password{% else %}Set Password{% endif %}
+                        </a>
+                    </div>
+                    {% if card.password %}
+                    <div class="mt-3 small">
+                        <span class="text-muted">Current Password:</span>
+                        {{ card.password|mask_password }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Management -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-edit me-2"></i>Content Management
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Profile Section -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-3 text-muted">Profile Information</h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'cards:update_business_card' card.uuid %}"
+                                            class="btn btn-primary">
+                                            <i class="fas fa-id-card me-2"></i>Business Card
+                                        </a>
+                                        <a href="{% url 'cards:update_gallery' card.uuid %}" class="btn btn-primary">
+                                            <i class="fas fa-images me-2"></i>Gallery
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Media Section -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-3 text-muted">Media Content</h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'cards:update_video_message' card.uuid %}"
+                                            class="btn btn-primary">
+                                            <i class="fas fa-video me-2"></i>Video Message
+                                        </a>
+                                        <a href="{% url 'cards:update_product_viewer' card.uuid %}"
+                                            class="btn btn-primary">
+                                            <i class="fas fa-cube me-2"></i>Product Viewer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Documents Section -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-3 text-muted">Documents</h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'cards:update_pdf_viewer' card.uuid %}" class="btn btn-primary">
+                                            <i class="fas fa-file-pdf me-2"></i>PDF Viewer
+                                        </a>
+                                        <a href="{% url 'cards:update_letter' card.uuid %}" class="btn btn-primary">
+                                            <i class="fas fa-envelope me-2"></i>Letter
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Links Section -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-3 text-muted">External Links</h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'cards:update_redirect_url' card.uuid %}"
+                                            class="btn btn-primary">
+                                            <i class="fas fa-link me-2"></i>Redirect URL
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add hover effect to all cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-5px)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
+
+<style>
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+    .btn i {
+        width: 16px;
+    }
+</style>
+{% endblock %}

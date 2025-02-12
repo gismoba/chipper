@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    {Bad Request
+{% endblock %}
+{% block content %}
+
+{% include 'base/js.html' %}
+<script>
+    Swal.fire({
+        icon: "warning",
+        title: 'Bad Request',
+        html: "Try Refresh Or come back later.",
+        confirmButtonText: 'Try Refresh',
+        confirmButtonColor: '#269ffd'
+    }).then(function(isConfirmed) {
+            if (isConfirmed){
+                document.location.href="/";
+            }
+        });
+    
+</script>
+{% endblock %}

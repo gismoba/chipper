@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %} | Login {% endblock %}
+
+
+{% block content %}
+
+
+<div class="container mt-5 pt-5">
+    {% if user.is_authenticated %}
+    <div class="col-12 mt-5 text-center">
+        <p class="lead alert alert-success"><i class="me-2 fa-solid fa-check-double"></i> You are logged in</p>
+        <a href="/" class="btn main-btn">Home Page</a>
+    </div>
+    {% else %}
+    <h2 class="mt-5 text-center alert alert-primary">Login</h2>
+    <div class="my-5">
+        <form method="post" action="{% url 'users:login' %}" class="card">
+            {% csrf_token %}
+            <div class="card-body">
+                {{ form|crispy }}
+                <button type="submit" class="btn main-btn my-2">login</button>
+                <hr>
+                <a href="{% url 'users:register' %}" class="link-style">Register New Account</a> <br>
+                <a class="link-style" href="{% url 'password_reset' %}">Forgotten password?</a>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load hitcount_tags %}
+<div class="card mx-auto" style="max-width: 500px;">
+    <div class="card-header text-center bg-primary text-white">
+        {% if card.data.business_card.logo_url %}
+            <img src="{{ card.data.business_card.logo_url }}" alt="Logo" class="img-fluid rounded-circle" style="max-width: 100px;">
+        {% endif %}
+    </div>
+    <div class="card-body text-center">
+        {% if card.data.business_card %}
+            <h3 class="card-title">{{ card.data.business_card.title }}</h3>
+            <p class="card-text">{{ card.data.business_card.desc }}</p>
+        {% else %}
+            <p>No business card data available.</p>
+        {% endif %}
+        {% get_hit_count for card as hits %}
+        Views: <small class="ms-3 color"><i class="fa-regular fa-eye"></i> {{ hits }}</small>
+    </div>
+</div>

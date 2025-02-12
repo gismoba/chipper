@@ -1,0 +1,17 @@
+{% load hitcount_tags %}
+<div class="mx-auto pdf-container" style="max-width: 1024px;">
+    {% if card.data.pdf_viewer %}
+    <div class="pdf-viewer">
+        <p>PDF Viewer</p>
+        <iframe
+        src="{{ card.data.pdf_viewer.file_url }}" 
+            allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        {% else %}
+            <p>No pdf file available.</p>
+        {% endif %}
+        
+        {% get_hit_count for card as hits %}
+        Views: <small class="ms-3 color"><i class="fa-regular fa-eye"></i> {{ hits }}</small>
+    </div>
+</div>

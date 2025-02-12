@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Forbidden
+{% endblock %}
+{% block content %}
+
+
+{% include 'base/js.html' %}
+<script>
+    Swal.fire({
+        icon: "warning",
+        title: 'Forbidden',
+        html: "{{ exception }}",
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#269ffd'
+    }).then(function(isConfirmed) {
+            if (isConfirmed){
+                document.location.href="/";
+            }
+        });
+    
+</script>
+
+{% endblock %}

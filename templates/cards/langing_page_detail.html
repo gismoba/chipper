@@ -1,0 +1,114 @@
+{% extends 'landing_base.html' %}
+{% load static %}
+{% load i18n %}
+{% load hitcount_tags %}
+{% block title %}
+    {% trans 'Home' %}
+{% endblock %}
+{% block content %}
+
+
+
+<div class="d-flex flex-row align-items-center">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            {% if card.user %}
+                {% if card.password %}
+                    {% if request.session.password_correct or request.user == card.user %}
+                    <div class="col-md-12 text-center">
+                        {% if card.data.choosen_product.product == "business_card" %}
+                        {% include 'cards/base/business_card.html' %}
+                        {% elif card.data.choosen_product.product == "gallery" %}
+                        {% include 'cards/base/gallery.html' %}
+                        {% elif card.data.choosen_product.product == "redirect_url" %}
+                        {% include 'cards/base/redirect_url.html' %}
+                        {% elif card.data.choosen_product.product == "letter" %}
+                        {% include 'cards/base/letter.html' %}
+                        {% elif card.data.choosen_product.product == "video_message" %}
+                        {% include 'cards/base/video_message.html' %}
+                        {% elif card.data.choosen_product.product == "pdf_viewer" %}
+                        {% include 'cards/base/pdf_viewer.html' %}
+                        {% elif card.data.choosen_product.product == "product_viewer" %}
+                        {% include 'cards/base/product_viewer.html' %}
+                        {% else %}
+                        <p class="text-danger">No data in this page.</p>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="col-md-12 text-center">
+                        <h2>This card is password protected</h2>
+                        <div class="mt-4">
+                            <form method="POST" action="{% url 'cards:check_password' card.uuid %}">
+                                {% csrf_token %}
+                                <input type="password" name="password" class="form-control custom-input" placeholder="Password">
+                                <input type="submit" name="submit" value="Submit" class="btn main-btn">
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div class="col-md-12 text-center">
+                    {% if card.data.choosen_product.product == "business_card" %}
+                    {% include 'cards/base/business_card.html' %}
+                    {% elif card.data.choosen_product.product == "gallery" %}
+                    {% include 'cards/base/gallery.html' %}
+                    {% elif card.data.choosen_product.product == "redirect_url" %}
+                    {% include 'cards/base/redirect_url.html' %}
+                    {% elif card.data.choosen_product.product == "letter" %}
+                    {% include 'cards/base/letter.html' %}
+                    {% elif card.data.choosen_product.product == "video_message" %}
+                    {% include 'cards/base/video_message.html' %}
+                    {% elif card.data.choosen_product.product == "pdf_viewer" %}
+                    {% include 'cards/base/pdf_viewer.html' %}
+                    {% elif card.data.choosen_product.product == "product_viewer" %}
+                    {% include 'cards/base/product_viewer.html' %}
+                    {% else %}
+                    <p class="text-danger">No data in this page.</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="col-md-12 text-center">
+                <div class="col-md-12 text-center">
+                    <h5 class="display-1">Register Your Card</h5>
+                    {% if user.is_authenticated %}
+                    <h3>You are logged in</h3>
+                    <h3><a href="{% url 'cards:link_new_card' card.uuid %}" class="link-style">Link with your logged in account ?</a> | <a href="{% url 'users:logout' %}?uuid={{card.uuid}}" class="link-style">Log Me Out First</a></h3>
+                    {% else %}
+                    <h3>
+                        <a href="{% url 'users:register' %}?uuid={{ card.uuid}}" class="link-style">Create New Account</a> | <a href="{% url 'users:login' %}?uuid={{card.uuid}}" class="link-style">Add to Existing Account</a>
+                    </h3>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-12 text-center">
+                
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block extrajs %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var countdownElement = document.getElementById('countdown');
+    var redirectLink = document.getElementById('redirect-link');
+    var countdown = 10; // seconds
+
+    var interval = setInterval(function() {
+        countdown--;
+        countdownElement.textContent = countdown;
+        if (countdown <= 0) {
+            clearInterval(interval);
+            window.location.href = redirectLink.href;
+        }
+    }, 1000);
+});
+</script>
+{% endblock %}

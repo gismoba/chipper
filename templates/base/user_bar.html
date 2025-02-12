@@ -1,0 +1,37 @@
+<div class="col-12 col-md-12 col-lg-2 mt-5 pt-1">
+    <div class="card">
+        <div class="nav flex-column">
+            <p class="text-center  mt-2">
+                <span class="border border-primary rounded-pill rounded-lg">
+                    <span class="me-2 ms-2">
+                        {% if request.user.first_name %}
+                        {{ request.user.first_name }}
+                        {% else %}
+                        {{ request.user.username }}
+                        {% endif %}
+                    </span>
+                </span>
+                <br>
+                <span>Cards: {{ user.user_cards.count }}</span>
+            </p>
+            <a class="btn primary-btn btn-sm mb-1 {% if active == 'profile' %}active{% endif %}" href="{% url 'users:user_profile' %}"><i class="fas fa-address-card"></i> Profile
+                {% if active == "profile" %}
+                <i class="fas fa-angle-double-right"></i>
+                {% endif %}
+            </a>
+            <a class="btn primary-btn btn-sm mb-1 {% if active == 'dashboard' %}active{% endif %}" href="{% url 'cards:user_dashboard' %}"><i class="fa-solid fa-gauge-high"></i> Dashboard
+                {% if active == "dashboard" %}
+                <i class="fas fa-angle-double-right"></i>
+                {% endif %}
+            </a>
+            <a class="btn primary-btn btn-sm mb-1" href="{% url 'users:logout' %}">
+                <i class="fas fa-sign-out-alt"></i> Log out
+            </a>
+            {% if user.is_superuser or user.is_staff %}
+            <a class="btn primary-btn btn-sm mb-1" href="{% url 'admin:index' %}"> 
+                <i class="fas fa-external-link-alt"></i> Manage site
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>

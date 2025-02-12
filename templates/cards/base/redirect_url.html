@@ -1,0 +1,14 @@
+
+<div class="card mx-auto mt-5" style="max-width: 500px;">
+    <div class="card-header text-center bg-primary text-white">
+        <h3>Redirect URL</h3>
+    </div>
+    <div class="card-body text-center">
+        {% if card.data.redirect_url %}
+            <p class="fw-bold">You will be redirected in <span id="countdown" class="text-success">10</span> seconds.</p>
+            <p><a href="{{ card.data.redirect_url.url }}" id="redirect-link" class="btn main-btn">{{ card.data.redirect_url.url }}</a></p>
+        {% else %}
+            <p>No redirect URL available.</p>
+        {% endif %}
+    </div>
+</div>

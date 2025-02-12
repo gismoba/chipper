@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Server error
+{% endblock %}
+{% block content %}
+
+{% include 'base/js.html' %}
+<script>
+    Swal.fire({
+        icon: "warning",
+        title: 'Error',
+        html: "Sorry an error occurred, please try again later.}",
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#269ffd'
+    }).then(function(isConfirmed) {
+            if (isConfirmed){
+                document.location.href="/";
+            }
+        });
+    
+</script>
+{% endblock %}

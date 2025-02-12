@@ -1,0 +1,31 @@
+{% load hitcount_tags %}
+<div class="card mx-auto mt-5" style="max-width: 500px;">
+    <div class="card-header text-center bg-secondary text-white">
+        <h3>Gallery</h3>
+    </div>
+    <div class="card-body">
+        {% if card.data.gallery %}
+            <div id="galleryCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in card.data.gallery.images %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ image }}" class="d-block w-100" alt="Gallery Image" style="min-height: 500px;max-height: 500px;object-fit: contain;">
+                        </div>
+                    {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#galleryCarousel" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#galleryCarousel" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        {% else %}
+            <p>No gallery data available.</p>
+        {% endif %}
+        {% get_hit_count for card as hits %}
+        Views: <small class="ms-3 color"><i class="fa-regular fa-eye"></i> {{ hits }}</small>
+    </div>
+</div>

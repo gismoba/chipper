@@ -1,0 +1,7 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+  {{ block.super }}
+  <a class="btn btn-outline-success" href="{% if url_batch %}{% url 'admin:view_all_urls' %}{% else %}{% url 'admin:view_all_codes' %}{% endif %}">View All</a>
+  <a class="btn btn-outline-success ml-5" href="{% if url_batch %}{% url 'admin:add_url_batch' %}{% else %}{% url 'admin:add_code_batch' %}{% endif %}">Add New Batch</a>
+{% endblock %}

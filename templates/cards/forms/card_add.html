@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+Register Your Card
+{% endblock %}
+{% block content %}
+
+
+<div class="d-flex flex-row align-items-center">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="mainTopic">Add new card</h2>
+                <div class="mt-4 card">
+                    <div class="card-body">
+                        <form method="post" class="py-3">
+                            {% csrf_token %}
+                            <input type="text" name="uuid" class="form-control  mb-4" placeholder="Card UUID">
+                            <input type="text" name="code" class="form-control mb-4" placeholder="Your Purchasing Code">
+                            <input type="submit" name="submit" value="Add" class="btn main-btn">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

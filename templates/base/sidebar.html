@@ -1,0 +1,63 @@
+{% load static %}
+<!-- Sidebar  -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h3>Chipper Group</h3>
+    </div>
+
+    <ul class="list-unstyled components">
+        <h3>
+            <img src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'img/user.jpg' %}{% endif %}" alt="{{ user.username }}" height="140" width="160" style="border-radius: 50%;">
+            <p>{{ user }}</p>
+        </h3>
+        {% comment %}
+        <li class="side-li">
+            <a href="#homeSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+                <li>
+                    <a href="#">Home 1</a>
+                </li>
+                <li>
+                    <a href="#">Home 2</a>
+                </li>
+                <li>
+                    <a href="#">Home 3</a>
+                </li>
+            </ul>
+        </li>
+        {% endcomment %}
+        <li class="side-li {% if active == 'dashboard' %}active{% endif %}">
+            <a href="{% url 'cards:user_dashboard' %}">
+                <i class="fa-solid fa-gauge-high"></i> 
+                <span style="margin-left:10px;">Dashboard
+                    {% if active == "dashboard" %}
+                    <i class="fas fa-angle-double-right"></i>
+                    {% endif %}
+                </span>
+            </a>
+        </li>
+        <li class="side-li {% if active == 'profile' %}active{% endif %}">
+            <a href="{% url 'users:user_profile' %}"><i class="fas fa-address-card"></i> 
+                <span style="margin-left:10px;">Profile
+                    {% if active == "profile" %}
+                    <i class="fas fa-angle-double-right"></i>
+                    {% endif %}
+                </span>
+            </a>
+        </li>
+        <li class="side-li">
+            <a href="{% url 'users:logout' %}"><i class="fas fa-sign-out-alt"></i> <span style="margin-left:10px;">Log out</span></a>
+        </li>
+        {% if user.is_superuser or user.is_staff %}
+        <li class="side-li">
+            <a href="{% url 'admin:index' %}"><i class="fas fa-external-link-alt"></i> <span style="margin-left:10px;">Manage site</span></a>
+        </li>
+        {% endif %}
+    </ul>
+    <div class="div-border"></div>
+    <ul class="list-unstyled buttons">
+        <li>
+            <a href="{% url 'cards:add_new_card' %}" class="btn primary-btn">Add New Card</a>
+        </li>
+    </ul>
+</nav>

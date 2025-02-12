@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load hitcount_tags %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}
+{% trans 'Dashboard' %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Analytics Section -->
+    <div class="row mb-5">
+        <div class="col-12 mb-4">
+            <h2 class="fw-bold">Analytics Overview</h2>
+        </div>
+
+        <!-- Charts -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Monthly Views</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="total-views" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">View Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="total-views-pie" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden spans for chart data -->
+        {% for month in hits_by_month.items %}
+        <span class="d-none views_{{ month.0 }}">{{ month.1 }}</span>
+        {% endfor %}
+    </div>
+
+    <!-- NFC Cards Section -->
+    <div class="row">
+        <div class="col-12 mb-4 d-flex justify-content-between align-items-center">
+            <h2 class="fw-bold mb-0">Your NFC Cards</h2>
+            <a href="{% url 'cards:add_new_card' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add New Card
+            </a>
+        </div>
+
+        <!-- Cards Grid -->
+        {% for card in user.user_cards.all %}
+        {% get_hit_count for card as hits %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm h-100 border-0 hover-shadow">
+                <div class="card-header bg-white border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0 text-truncate">{{ card }}</h5>
+                        <span class="badge bg-light text-dark">
+                            <i class="far fa-eye me-1"></i>{{ hits }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Card Details -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas {% if card.password %}fa-lock{% else %}fa-unlock{% endif %} me-2"></i>
+                            <span>Password:
+                                {% if card.password %}
+                                {{ card.password|mask_password }}
+                                {% else %}
+                                <span class="text-danger">{% trans 'not specified' %}</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'cards:card_detail' card.uuid %}" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Update Card
+                        </a>
+
+                        <a href="{{ card.get_absolute_url }}" class="btn btn-outline-primary" target="_blank">
+                            <i class="fas fa-external-link-alt me-2"></i>View on Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>You haven't created any cards yet.
+                <a href="{% url 'cards:add_new_card' %}" class="alert-link">Create your first card</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Monthly Views Line Chart
+        const monthlyViewsCtx = document.getElementById('total-views').getContext('2d');
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const viewsData = months.map((_, index) => {
+            return parseInt(document.querySelector(`.views_${index + 1}`).textContent) || 0;
+        });
+
+        new Chart(monthlyViewsCtx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Monthly Views',
+                    data: viewsData,
+                    borderColor: '#0d6efd',
+                    tension: 0.1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // View Distribution Pie Chart
+        const pieCtx = document.getElementById('total-views-pie').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: months,
+                datasets: [{
+                    data: viewsData,
+                    backgroundColor: [
+                        '#0d6efd', '#6610f2', '#6f42c1', '#d63384',
+                        '#dc3545', '#fd7e14', '#ffc107', '#198754',
+                        '#20c997', '#0dcaf0', '#6c757d', '#343a40'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    .hover-shadow {
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .hover-shadow:hover {
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+    }
+</style>
+{% endblock %}

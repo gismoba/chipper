@@ -1,0 +1,17 @@
+{% load hitcount_tags %}
+<div class="mx-auto pdf-container" style="max-width: 1024px;">
+    {% if card.data.pdf_viewer %}
+    <div class="pdf-viewer">
+        <p>Video Message</p>
+        <video controls muted style="height:350px" autoplay loop>
+            <source src="{{ card.data.video_message.video_url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        {% else %}
+            <p>No video file available.</p>
+        {% endif %}
+        <br>
+        {% get_hit_count for card as hits %}
+        Views: <small class="ms-3 color"><i class="fa-regular fa-eye"></i> {{ hits }}</small>
+    </div>
+</div>
